@@ -9,7 +9,7 @@ import csv
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Sensitive information and configuration
-GITLAB_TOKEN = "glhhhjhjjjknknkn"
+GITLAB_TOKEN = "glhhhjhjjjknknkn"  # GitLab token
 GITLAB_BASE_URL = "ghgjhknkjlb"  # Custom GitLab instance URL
 GITLAB_GROUP = "c-team"  # Adjust according to your group or user namespace
 GITHUB_ORG = "******"
@@ -34,7 +34,9 @@ def create_github_repo(repo):
 
 def clone_repo_bare(repo):
     logging.info(f"Cloning repository as bare: {repo}")
-    subprocess.run(["git", "clone", "--bare", f"https://{GITLAB_TOKEN}@{GITLAB_BASE_URL}/{GITLAB_GROUP}/{repo}.git"], check=True)
+    # Use GitLab token to authenticate when cloning
+    clone_url = f"https://{GITLAB_TOKEN}@{GITLAB_BASE_URL}/{GITLAB_GROUP}/{repo}.git"
+    subprocess.run(["git", "clone", "--bare", clone_url], check=True)
 
 def list_large_files(repo):
     logging.info(f"Listing large files in repository: {repo}")
