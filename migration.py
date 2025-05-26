@@ -14,6 +14,8 @@ GITLAB_DOMAIN = "your.gitlab.domain"  # E.g. gitlab.company.com
 GITLAB_GROUP = "c-team"
 GITHUB_ORG = "your-github-org"
 GITHUB_PAT = "ghp_yourgithubtoken"
+GITLAB_USER = "your_gitlab_username"
+GITLAB_TOKEN = "your_gitlab_personal_access_token"  # Your GitLab personal access token
 CSV_FILE_NAME = "repositories.csv"
 LOG_FILE_NAME = "migration_log.csv"
 
@@ -44,7 +46,7 @@ def create_github_repo(repo):
         raise Exception(f"Failed to create repo {repo}: {r.text}")
 
 def clone_gitlab_repo(repo):
-    url = f"https://{GITLAB_DOMAIN}/{GITLAB_GROUP}/{repo}.git"
+    url = f"https://{GITLAB_USER}:{GITLAB_TOKEN}@{GITLAB_DOMAIN}/{GITLAB_GROUP}/{repo}.git"
     subprocess.run(["git", "clone", "--bare", url], check=True)
 
 def list_large_files(repo):
@@ -59,7 +61,7 @@ def list_large_files(repo):
             if len(parts) >= 3:
                 try:
                     size = int(parts[1])
-                    if size > 104857600:
+                    if size > 104857600:  # Files larger than 100MB (104857600 bytes)
                         files.append(parts[2])
                 except ValueError:
                     continue
