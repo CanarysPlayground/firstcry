@@ -14,6 +14,8 @@ GITLAB_DOMAIN = "your.gitlab.domain"  # E.g. gitlab.company.com
 GITLAB_GROUP = "c-team"
 GITHUB_ORG = "your-github-org"
 GITHUB_PAT = "ghp_yourgithubtoken"
+GITLAB_USER = "your_gitlab_username"  # Add your GitLab username here
+GITLAB_TOKEN = "your_gitlab_token"  # Add your GitLab personal access token here
 CSV_FILE_NAME = "repositories.csv"
 LOG_FILE_NAME = "migration_log.csv"
 
@@ -45,7 +47,8 @@ def create_github_repo(repo):
         raise Exception(f"Failed to create repo {repo}: {r.text}")
 
 def clone_gitlab_repo(source_repo, target_repo):
-    url = f"https://{GITLAB_DOMAIN}/{GITLAB_GROUP}/{source_repo}.git"
+    # GitLab authentication included in the URL
+    url = f"https://{GITLAB_USER}:{GITLAB_TOKEN}@{GITLAB_DOMAIN}/{GITLAB_GROUP}/{source_repo}.git"
     subprocess.run(["git", "clone", "--bare", url, target_repo], check=True)
 
 def list_large_files(repo):
