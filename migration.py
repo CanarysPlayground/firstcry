@@ -46,8 +46,14 @@ def create_github_repo(repo):
         raise Exception(f"Failed to create repo {repo}: {r.text}")
 
 def clone_gitlab_repo(repo):
+    # Construct GitLab repo URL with authentication via personal access token
     url = f"https://{GITLAB_USER}:{GITLAB_TOKEN}@{GITLAB_DOMAIN}/{GITLAB_GROUP}/{repo}.git"
-    subprocess.run(["git", "clone", "--bare", url], check=True)
+    logging.info(f"Cloning GitLab repo: {url}")
+    try:
+        subprocess.run(["git", "clone", "--bare", url], check=True)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to clone {repo}: {e}")
+        raise
 
 def list_large_files(repo):
     os.chdir(f"{repo}.git")
